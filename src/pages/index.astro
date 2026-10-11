@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, hire, sites } from '../content';
+import '../styles/hire.css';
+
+const others = [{ name: 'Work', href: sites.work }, { name: 'Story', href: sites.story }].filter(v => v.href);
+---
+<Base
+  title={`${person.name} — Hire`}
+  description="AI assistants on WhatsApp, CRMs that read their own paperwork, and reports that write themselves. Three shipped examples and how to start."
+  fonts="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@1,700&family=Outfit:wght@300;400;500;600&display=swap"
+  theme="#061c16"
+>
+  <div class="bg"></div>
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <nav class="bar" aria-label="Sections">
+    <a class="logo" href="/">{person.first}</a>
+    <div class="pill">
+      {hire.filter(s => s.nav).map((s, i) => <a href={`#${s.id}`} class:list={{ on: i === 0 }}>{s.nav}</a>)}
+    </div>
+    <a class="cta mag" href="#contact">Contact</a>
+  </nav>
+  <div class="dots" aria-hidden="true"></div>
+
+  <main>
+    {hire.map((s, i) => {
+      const Tag = i === 0 ? 'h1' : 'h2';
+      const last = i === hire.length - 1;
+      return (
+        <section id={s.id} class:list={{ r: i % 2 === 1 }}>
+          <div class="copy">
+            <p class="kicker">{s.kicker}</p>
+            <Tag>{s.title}</Tag>
+            <p>{s.body}</p>
+            {s.cards && (
+              <div class="glass">
+                {s.cards.map(c => <div class="card"><b>{c.big}</b><span>{c.small}</span></div>)}
+              </div>
+            )}
+            {s.cta && (
+              <div class="row">
+                <a class="cta mag" href={s.cta.href}>{s.cta.label}</a>
+                <span class="plus" aria-hidden="true">{last ? '→' : '+'}</span>
+              </div>
+            )}
+            {last && (
+              <p class="others">
+                Also: <a href={person.linkedin}>LinkedIn</a><a href={person.github}>GitHub</a>
+                {others.map(v => <a href={v.href}>{v.name} version</a>)}
+              </p>
+            )}
+          </div>
+          {i === 0 && <div class="giant" aria-hidden="true">Built,<br />not promised</div>}
+        </section>
+      );
+    })}
+  </main>
+
+  <script>
+    import '../scripts/morph.ts';
+  </script>
+</Base>
